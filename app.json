@@ -1,5 +1,8 @@
 {
   "expo": {
+    "router": {
+      "appDirectory": "./app"
+    },
     "name": "ftoyd-matches-second",
     "slug": "ftoyd-matches-second",
     "version": "1.0.0",
@@ -19,7 +22,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -32,6 +35,21 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/TacticSans-BlkIt.ttf",
+            "./assets/fonts/Inter-SemiBold.otf"
+          ]
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/images/user.png"]
+        }
       ]
     ],
     "experiments": {
@@ -39,3 +57,4 @@
     }
   }
 }
+
