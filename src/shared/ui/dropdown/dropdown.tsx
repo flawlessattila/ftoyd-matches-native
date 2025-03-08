@@ -3,9 +3,9 @@ import {
   View,
   Modal,
   FlatList,
-  StyleSheet,
   StyleProp,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 import styled from "styled-components/native";
 import { DropdownIcon, DropupIcon } from "../icons/icons";
@@ -20,7 +20,6 @@ import { Text } from "../text/text";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from "react-native-reanimated";
 import { DropdownOption } from "./dropdown-option";
 
@@ -91,20 +90,30 @@ export const Dropdown = <T,>({
     borderColor: borderColor.value,
   }));
 
+  const { width } = useWindowDimensions();
+
   const toggleDropdown = () => {
     if (!expanded) {
-      selectRef.current?.measure((fx, fy, width, height, px, py) => {
-        setDropdownPosition({
-          top: py + height + 5,
-          left: px,
-          width: Math.max(width, 120),
-        });
-        setExpanded(true);
-      });
+      updatePosition();
+      setExpanded(true);
     } else {
       setExpanded(false);
     }
   };
+
+  const updatePosition = () => {
+    selectRef.current?.measure((fx, fy, width, height, px, py) => {
+      setDropdownPosition({
+        top: py + height + 5,
+        left: px,
+        width: Math.max(width, 120),
+      });
+    });
+  };
+
+  useEffect(() => {
+    updatePosition();
+  }, [width]);
 
   function handlePressIn() {
     backgroundColor.value = dark[700];

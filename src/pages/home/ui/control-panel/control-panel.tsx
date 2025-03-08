@@ -8,6 +8,7 @@ import styled from "styled-components/native";
 import { StatusFilter, useFilter } from "../../lib/filter-context";
 import { Dropdown } from "@/shared/ui/dropdown/dropdown";
 import { StyleProp, ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Container = styled.View`
   flex-direction: row;
@@ -50,63 +51,65 @@ const ControlPanel = () => {
   const { filter, setFilter } = useFilter();
 
   return (
-    <Container
-      style={{
-        gap: breakpoints({ xs: 10, sm: 20 }),
-        marginBottom: breakpoints({ xs: 32, sm: 20 }),
-        flexDirection: breakpoints({ xs: "column", sm: "row" }),
-        alignItems: breakpoints({ xs: "stretch", sm: "center" }),
-      }}
-    >
-      <LeftPart
+    <SafeAreaView>
+      <Container
         style={{
-          flexGrow: breakpoints({ xs: 1, sm: 0 }),
+          gap: breakpoints({ xs: 10, sm: 20 }),
+          marginBottom: breakpoints({ xs: 32, sm: 20 }),
+          flexDirection: breakpoints({ xs: "column", sm: "row" }),
+          alignItems: breakpoints({ xs: "stretch", sm: "center" }),
         }}
       >
-        <Heading
+        <LeftPart
           style={{
-            textAlign: breakpoints({ xs: "center", sm: "left" }),
-            fontSize: breakpoints({ xs: 28, sm: 32 }),
             flexGrow: breakpoints({ xs: 1, sm: 0 }),
           }}
         >
-          Match Tracker
-        </Heading>
-        <Dropdown
-          wrapperStyle={
-            {
-              width: breakpoints({ xs: "100%", sm: "unset" }),
-            } as StyleProp<ViewStyle>
-          }
-          onSelect={(v) => setFilter({ status: v.value })}
-          value={filter.status}
-          options={statusOptions}
-        />
-      </LeftPart>
-
-      <Actions
-        style={{
-          flexGrow: breakpoints({ xs: 1, sm: 0 }),
-        }}
-      >
-        {isError && (
-          <Alert
-            style={{ flexGrow: 1 }}
-            title="Ошибка: не удалось загрузить информацию"
-            $appearWithAnimation
+          <Heading
+            style={{
+              textAlign: breakpoints({ xs: "center", sm: "left" }),
+              fontSize: breakpoints({ xs: 28, sm: 32 }),
+              flexGrow: breakpoints({ xs: 1, sm: 0 }),
+            }}
+          >
+            Match Tracker
+          </Heading>
+          <Dropdown
+            wrapperStyle={
+              {
+                width: breakpoints({ xs: "100%", sm: "unset" }),
+              } as StyleProp<ViewStyle>
+            }
+            onSelect={(v) => setFilter({ status: v.value })}
+            value={filter.status}
+            options={statusOptions}
           />
-        )}
+        </LeftPart>
 
-        <Button
-          wrapperStyle={{ flexGrow: 1 }}
-          disabled={isFetching}
-          onPress={refetch.bind(null, {})}
-          endSlot={<RefreshIcon />}
+        <Actions
+          style={{
+            flexGrow: breakpoints({ xs: 1, sm: 0 }),
+          }}
         >
-          Обновить
-        </Button>
-      </Actions>
-    </Container>
+          {isError && (
+            <Alert
+              style={{ flexGrow: 1 }}
+              title="Ошибка: не удалось загрузить информацию"
+              $appearWithAnimation
+            />
+          )}
+
+          <Button
+            wrapperStyle={{ flexGrow: 1 }}
+            disabled={isFetching}
+            onPress={refetch.bind(null, {})}
+            endSlot={<RefreshIcon />}
+          >
+            Обновить
+          </Button>
+        </Actions>
+      </Container>
+    </SafeAreaView>
   );
 };
 

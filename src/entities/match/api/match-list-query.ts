@@ -1,8 +1,4 @@
-import {
-  queryOptions,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Match } from "../model/match.types";
 import { customFetch } from "@/shared/lib/custom-fetch";
 import { useEffect } from "react";
@@ -33,7 +29,7 @@ export const matchQueryOptions = queryOptions({
 });
 
 export const useMatches = () => {
-  return useSuspenseQuery(matchQueryOptions);
+  return useQuery(matchQueryOptions);
 };
 
 export const useMatchesWithSocket = () => {

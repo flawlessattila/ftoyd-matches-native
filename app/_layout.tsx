@@ -1,6 +1,5 @@
 import "react-native-reanimated";
 import { Providers } from "@/app_/providers";
-import BasicLayout from "@/shared/ui/layouts/basic-layout";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
 

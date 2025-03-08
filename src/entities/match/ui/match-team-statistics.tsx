@@ -42,7 +42,9 @@ const MatchTeamStatistics = ({ team }: { team: Team }) => {
         ))}
       </PlayersContainer>
       <TeamStatisticsContainer>
-        <Statistics label="Points:">{team.points}</Statistics>
+        <Statistics label="Points:">
+          {team.points > 0 ? `+${team.points}` : team.points}
+        </Statistics>
         <TeamStatisticsDivider />
         <Statistics label="Место:">{team.place}</Statistics>
         <TeamStatisticsDivider />

@@ -1,6 +1,7 @@
 "use client";
 import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
 import React, { ReactNode } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 
 type LayoutProps = {
@@ -9,6 +10,7 @@ type LayoutProps = {
 
 const Wrapper = styled.View`
   flex: 1;
+  background-color: ${(props) => props.theme.colors.dark[800]};
 `;
 
 const Container = styled.View`

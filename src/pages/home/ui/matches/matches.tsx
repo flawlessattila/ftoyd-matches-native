@@ -1,10 +1,9 @@
-import { MatchCard } from "@/entities/match";
+import { MatchCard, MatchCardSkeleton } from "@/entities/match";
 import { useMatches, useMatchesWithSocket } from "@/entities/match";
 import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
 import React, { useMemo } from "react";
 import { View } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
-import styled from "styled-components/native";
+import { FlatList } from "react-native-gesture-handler";
 import { useFilter } from "../../lib/filter-context";
 
 const MatchesSeparator = () => {
@@ -21,8 +20,19 @@ const Matches = () => {
     if (!filter.status) {
       return data;
     }
-    return data.filter((m) => m.status == filter.status);
+    return data?.filter((m) => m.status == filter.status);
   }, [data, filter]);
+
+  if (!matches && isFetching) {
+    return (
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={Array(8).map((_, i) => (i + 1).toString())}
+        renderItem={({ item }) => <MatchCardSkeleton key={item} />}
+        ItemSeparatorComponent={MatchesSeparator}
+      />
+    );
+  }
 
   return (
     <FlatList
