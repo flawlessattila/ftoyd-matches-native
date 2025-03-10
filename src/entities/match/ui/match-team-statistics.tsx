@@ -4,9 +4,9 @@ import type { Player as PlayerType } from "@/entities/match/@x/player";
 import styled from "styled-components/native";
 import { FloatingCard } from "@/shared/ui/floating-card/floating-card";
 import { Statistics } from "@/shared/ui/statistics/statistics";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
 import { Text } from "@/shared/ui/text/text";
-import { Image } from "react-native";
+import { Image, StyleProp, ViewStyle } from "react-native";
+import { useMedia } from "@/shared/lib/use-media";
 
 const TeamStatisticsDivider = styled.View`
   width: 1px;
@@ -33,9 +33,10 @@ const Container = styled.View`
 `;
 
 const MatchTeamStatistics = ({ team }: { team: Team }) => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({ flex: { xs: 1, sm: undefined } });
+
   return (
-    <Container style={{ flex: breakpoints({ xs: 1, sm: undefined }) }}>
+    <Container style={breakpoints}>
       <PlayersContainer>
         {team.players.map((p) => (
           <PlayerStatistics key={p.username} player={p} />
@@ -82,26 +83,25 @@ const PlayerContainer = styled(FloatingCard)`
 `;
 
 const PlayerStatistics = ({ player }: { player: PlayerType }) => {
-  const { breakpoints } = useScreenSizeValue();
-  const iconSize = breakpoints({ xs: 32, sm: 36 });
+  const breakpoints = useMedia({
+    container: { justifyContent: { xs: "center", sm: "space-between" } },
+    usename: { fontSize: { xs: 14, sm: 16 } },
+    icon: { size: { xs: 32, sm: 36 } },
+  });
 
   return (
-    <PlayerContainer
-      style={{
-        justifyContent: breakpoints({ xs: "center", sm: "space-between" }),
-      }}
-    >
+    <PlayerContainer style={breakpoints.container as StyleProp<ViewStyle>}>
       <Player>
         <Image
-          height={iconSize}
-          width={iconSize}
+          height={breakpoints.icon.size}
+          width={breakpoints.icon.size}
           source={require("./../../../../assets/images/user.png")}
         />
         <Username
           ellipsizeMode="tail"
           numberOfLines={1}
           $weight={600}
-          style={{ fontSize: breakpoints({ xs: 14, sm: 16 }) }}
+          style={breakpoints.usename}
         >
           {player.username}
         </Username>

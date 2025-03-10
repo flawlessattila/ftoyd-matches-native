@@ -4,8 +4,14 @@ import styled from "styled-components/native";
 import { MatchTeam } from "./match-team";
 import { Match } from "../model/match.types";
 import { MatchStatus } from "./match-status";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
-import { Platform, Pressable, useWindowDimensions, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleProp,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +22,8 @@ import { ChevronDownIcon } from "@/shared/ui/icons/icons";
 import { MatchProvider } from "../lib/match-context";
 import { MatchTeamStatistics } from "./match-team-statistics";
 import { Text } from "@/shared/ui/text/text";
+import { useMedia } from "@/shared/lib/use-media";
+import { useBreakpoints } from "@/shared/lib/breakpoints";
 
 const Container = styled(FloatingCard)`
   flex-direction: column;
@@ -40,18 +48,32 @@ const MatchDetails = styled.View`
 `;
 
 const MatchCard = ({ data }: { data: Match }) => {
-  const { homeTeam, homeScore, awayTeam, awayScore, status } = data;
-  const { breakpoints } = useScreenSizeValue();
-  const [expanded, setExpanded] = useState<boolean>(false);
   const { width } = useWindowDimensions();
-
   const height = useSharedValue(0);
+  const { homeTeam, homeScore, awayTeam, awayScore, status } = data;
+  const [expanded, setExpanded] = useState<boolean>(false);
   const [measuredHeight, setMeasuredHeight] = useState(0);
 
   const toggleExpand = () => {
     height.value = withTiming(expanded ? 0 : measuredHeight, { duration: 300 });
     setExpanded(!expanded);
   };
+
+  const breakpoints = useBreakpoints();
+
+  const media = useMedia({
+    container: {
+      paddingHorizontal: { xs: 8, sm: 36 },
+      paddingVertical: { xs: 8, sm: 16 },
+    },
+    mainCardWrapper: { paddingBottom: { xs: expanded ? 16 : 0 } },
+    matchDetails: {
+      flexDirection: { xs: "column", sm: "row" },
+      padding: { xs: 0, sm: 12 },
+      paddingTop: { xs: 16, sm: 48 },
+      gap: { xs: 8, sm: 32 },
+    },
+  });
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: height.value,
@@ -64,16 +86,9 @@ const MatchCard = ({ data }: { data: Match }) => {
 
   return (
     <MatchProvider match={data}>
-      <Container
-        style={{
-          paddingHorizontal: breakpoints({ xs: 8, sm: 36 }),
-          paddingVertical: breakpoints({ xs: 8, sm: 16 }),
-        }}
-      >
+      <Container style={media.container}>
         <MainCardWrapper
-          style={{
-            paddingBottom: breakpoints({ xs: expanded ? 16 : 0 }),
-          }}
+          style={media.mainCardWrapper}
           onPress={toggleExpand.bind(null)}
         >
           <MainCardContainer>
@@ -85,7 +100,7 @@ const MatchCard = ({ data }: { data: Match }) => {
             />
             <MatchTeam name={awayTeam.name} type="away" />
           </MainCardContainer>
-          {breakpoints({ xs: null, sm: <ExpandIcon expanded={expanded} /> })}
+          {breakpoints != "xs" && <ExpandIcon expanded={expanded} />}
         </MainCardWrapper>
         <Animated.View style={animatedStyle}>
           <MatchDetails
@@ -93,32 +108,26 @@ const MatchCard = ({ data }: { data: Match }) => {
               const { height } = event.nativeEvent.layout;
               setMeasuredHeight(Platform.OS === "ios" ? 309 : height);
             }}
-            style={{
-              flexDirection: breakpoints({ xs: "column", sm: "row" }),
-              padding: breakpoints({ xs: 0, sm: 12 }),
-              gap: breakpoints({ xs: 8, sm: 32 }),
-              height: Platform.OS === "ios" ? "100%" : undefined,
-            }}
+            style={[
+              media.matchDetails as StyleProp<ViewProps>,
+              {
+                height: Platform.OS === "ios" ? "100%" : undefined,
+              },
+            ]}
           >
             <MatchTeamStatistics team={homeTeam} />
-            {breakpoints({
-              xs: <MobileVersus />,
-              sm: null,
-            })}
+            {breakpoints == "xs" && <MobileVersus />}
             <MatchTeamStatistics team={awayTeam} />
           </MatchDetails>
         </Animated.View>
-        {breakpoints({
-          xs: (
-            <Pressable
-              onPress={toggleExpand.bind(null)}
-              style={{ marginHorizontal: "auto", paddingTop: 8 }}
-            >
-              <ExpandIcon expanded={expanded} />
-            </Pressable>
-          ),
-          sm: null,
-        })}
+        {breakpoints == "xs" && (
+          <Pressable
+            onPress={toggleExpand.bind(null)}
+            style={{ marginHorizontal: "auto", paddingTop: 8 }}
+          >
+            <ExpandIcon expanded={expanded} />
+          </Pressable>
+        )}
       </Container>
     </MatchProvider>
   );

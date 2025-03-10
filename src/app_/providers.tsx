@@ -4,6 +4,7 @@ import { theme } from "@/shared/theme/theme";
 import { ThemeProvider } from "styled-components/native";
 import { useFonts } from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BreakpointsProvider } from "@/shared/lib/breakpoints";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   const [] = useFonts({
@@ -17,11 +18,13 @@ const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+    <BreakpointsProvider>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </BreakpointsProvider>
   );
 };
 

@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { EMatchStatus } from "../model/match.types";
 import { StatusBadge } from "@/shared/ui/status-badge/status-badge";
 import styled from "styled-components/native";
 import { Text } from "@/shared/ui/text/text";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
-import { useSharedValue, withTiming } from "react-native-reanimated";
-import { Animated } from "react-native";
 import { useAnimatedNumber } from "@/shared/lib/use-animated-number";
+import { useMedia } from "@/shared/lib/use-media";
 
 type MatchStatusProps = {
   homeScore: number;
@@ -37,14 +35,14 @@ const getMatchStatusBadge = (status: EMatchStatus) => {
 };
 
 const MatchStatus = ({ homeScore, awayScore, status }: MatchStatusProps) => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({ fontSize: { xs: 14, sm: 20 } });
   const { number: scoreLeft } = useAnimatedNumber(homeScore);
   const { number: scoreRight } = useAnimatedNumber(awayScore);
 
   return (
     <Container>
       <Score
-        style={{ fontSize: breakpoints({ xs: 14, sm: 20 }) }}
+        style={breakpoints}
         $weight={600}
       >{`${scoreLeft} : ${scoreRight}`}</Score>
       {getMatchStatusBadge(status)}

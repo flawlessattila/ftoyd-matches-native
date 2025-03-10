@@ -1,4 +1,4 @@
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
+import { useMedia } from "@/shared/lib/use-media";
 import { TeamTemplateIcon } from "@/shared/ui/icons/icons";
 import { Text } from "@/shared/ui/text/text";
 import React from "react";
@@ -24,18 +24,19 @@ const Name = styled(Text)<{ $reverseDir?: boolean }>`
 `;
 
 const MatchTeam = ({ name, type = "home" }: MatchTeamProps) => {
-  const { breakpoints } = useScreenSizeValue();
-
-  const iconSize = breakpoints({ xs: 28, sm: 48 });
+  const breakpoints = useMedia({
+    container: { gap: { xs: 6, sm: 14 } },
+    name: { fontSize: { xs: 14, sm: 16 } },
+    icon: { size: { xs: 28, sm: 48 } },
+  });
 
   return (
-    <Container style={{ gap: breakpoints({ xs: 6, sm: 14 }) }}>
-      <TeamTemplateIcon height={iconSize} width={iconSize} />
-      <Name
-        style={{ fontSize: breakpoints({ xs: 14, sm: 16 }) }}
-        $weight={600}
-        $reverseDir={type == "away"}
-      >
+    <Container style={breakpoints.container}>
+      <TeamTemplateIcon
+        height={breakpoints.icon.size}
+        width={breakpoints.icon.size}
+      />
+      <Name style={breakpoints.name} $weight={600} $reverseDir={type == "away"}>
         {name}
       </Name>
     </Container>

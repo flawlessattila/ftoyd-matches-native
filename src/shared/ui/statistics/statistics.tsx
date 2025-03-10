@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import styled from "styled-components/native";
 import { Text } from "../text/text";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
+import { useMedia } from "@/shared/lib/use-media";
 
 const Container = styled.View`
   flex-direction: row;
@@ -25,20 +25,17 @@ const Statistics = ({
   label: string;
   children: ReactNode;
 }) => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({
+    label: { fontSize: { xs: 12, sm: 14 } },
+    value: { fontSize: { xs: 14, sm: 16 } },
+  });
 
   return (
     <Container>
-      <Label
-        style={{ fontSize: breakpoints({ xs: 12, sm: 14 }) }}
-        $weight={400}
-      >
+      <Label style={breakpoints.label} $weight={400}>
         {label}
       </Label>
-      <Value
-        style={{ fontSize: breakpoints({ xs: 14, sm: 16 }) }}
-        $weight={600}
-      >
+      <Value style={breakpoints.value} $weight={600}>
         {children}
       </Value>
     </Container>

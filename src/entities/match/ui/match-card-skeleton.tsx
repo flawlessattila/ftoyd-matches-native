@@ -1,4 +1,4 @@
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
+import { useMedia } from "@/shared/lib/use-media";
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import React from "react";
 import styled from "styled-components/native";
@@ -11,15 +11,13 @@ const SkeletonContainer = styled.View`
 `;
 
 const MatchCardSkeleton = () => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({
+    height: { xs: 103, sm: 87 },
+  });
   const theme = useTheme();
 
   return (
-    <SkeletonContainer
-      style={{
-        height: breakpoints({ xs: 103, sm: 87 }),
-      }}
-    >
+    <SkeletonContainer style={breakpoints}>
       <Skeleton style={{ backgroundColor: theme.colors.dark[600] }} />
     </SkeletonContainer>
   );

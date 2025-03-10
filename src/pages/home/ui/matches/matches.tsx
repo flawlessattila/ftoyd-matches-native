@@ -1,14 +1,14 @@
 import { MatchCard, MatchCardSkeleton } from "@/entities/match";
 import { useMatches, useMatchesWithSocket } from "@/entities/match";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
 import React, { useMemo } from "react";
 import { View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useFilter } from "../../lib/filter-context";
+import { useMedia } from "@/shared/lib/use-media";
 
 const MatchesSeparator = () => {
-  const { breakpoints } = useScreenSizeValue();
-  return <View style={{ paddingTop: breakpoints({ xs: 8, sm: 12 }) }} />;
+  const breakpoints = useMedia({ paddingTop: { xs: 8, sm: 12 } });
+  return <View style={breakpoints} />;
 };
 
 const Matches = () => {

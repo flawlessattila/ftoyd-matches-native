@@ -1,7 +1,5 @@
-"use client";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
+import { useMedia } from "@/shared/lib/use-media";
 import React, { ReactNode } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 
 type LayoutProps = {
@@ -21,13 +19,14 @@ const Container = styled.View`
 `;
 
 const DefaultLayout = ({ children }: LayoutProps) => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({
+    wrapper: { paddingHorizontal: { xs: 16, sm: 42 } },
+    container: { paddingVertical: { xs: 32, sm: 42 } },
+  });
 
   return (
-    <Wrapper style={{ paddingHorizontal: breakpoints({ xs: 16, sm: 42 }) }}>
-      <Container style={{ paddingVertical: breakpoints({ xs: 32, sm: 42 }) }}>
-        {children}
-      </Container>
+    <Wrapper style={breakpoints.wrapper}>
+      <Container style={breakpoints.container}>{children}</Container>
     </Wrapper>
   );
 };

@@ -2,7 +2,7 @@ import { resolveThemeColor, ThemeColor } from "@/shared/theme/theme";
 import React, { ReactNode } from "react";
 import styled, { css } from "styled-components/native";
 import { Text } from "../text/text";
-import { useScreenSizeValue } from "@/shared/lib/use-sreen-size-value";
+import { useMedia } from "@/shared/lib/use-media";
 
 type StatusBadgeProps = {
   color?: ThemeColor;
@@ -27,17 +27,14 @@ const StatusText = styled(Text)`
 `;
 
 const StatusBadge = ({ color, children }: StatusBadgeProps) => {
-  const { breakpoints } = useScreenSizeValue();
+  const breakpoints = useMedia({
+    minWidth: { xs: 70, sm: 92 },
+    paddingVertical: { xs: 4, sm: 6 },
+    paddingHorizontal: { xs: 6, sm: 8 },
+  });
 
   return (
-    <ContainerStyled
-      style={{
-        minWidth: breakpoints({ xs: 70, sm: 92 }),
-        paddingVertical: breakpoints({ xs: 4, sm: 6 }),
-        paddingHorizontal: breakpoints({ xs: 6, sm: 8 }),
-      }}
-      color={resolveThemeColor(color)}
-    >
+    <ContainerStyled style={breakpoints} color={resolveThemeColor(color)}>
       <StatusText $weight={600}>{children}</StatusText>
     </ContainerStyled>
   );
