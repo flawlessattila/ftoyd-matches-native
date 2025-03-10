@@ -1,7 +1,7 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Match } from "../model/match.types";
 import { customFetch } from "@/shared/lib/custom-fetch";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function matchesMap(m: any) {
   return {
@@ -19,13 +19,15 @@ export const matchQueryOptions = queryOptions({
       { cache: "no-store" }
     );
 
-    const json = await response.json();
-    if (response.status > 299 || !json.ok) {
+    if (response.status > 299) {
       throw new Error("wrong-status");
     }
 
+    const json = await response.json();
+
     return json.data.matches.map(matchesMap);
   },
+  retry: false,
 });
 
 export const useMatches = () => {
@@ -41,8 +43,11 @@ export const useMatchesWithSocket = () => {
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const matches: Match[] = data.data;
-
       queryClient.setQueryData(["matches"], matches.map(matchesMap));
+    };
+
+    ws.onerror = () => {
+      console.log("Ошибка при подключении к сокету матчей");
     };
 
     return () => ws.close();

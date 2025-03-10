@@ -46,8 +46,10 @@ const statusOptions: { label: string; value: StatusFilter }[] = [
 ];
 
 const ControlPanel = () => {
-  const { refetch, isFetching, isError } = useMatches();
+  const { refetch, isFetching, isError, error } = useMatches();
   const { filter, setFilter } = useFilter();
+
+  console.log("isError", isError, error);
 
   const breakpoints = useMedia({
     container: {
